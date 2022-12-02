@@ -91,13 +91,14 @@ private:
 	int seat = 0; //column of the position in the stand
 	int row = 0;
 	int stand = 0;
-	char* section = nullptr;
+	std::string section = "";
 	int zone = 0;
-	char* date = nullptr; //date format DD-MM-YY
-	char* time = nullptr; //time format 15:47
-	char* ID = nullptr; //nominal ticket, corresponds with a unique identification string of 10 characters
+	std::string date = ""; //date format DD-MM-YY
+	std::string time = ""; //time format 15:47
+	std::string ID = ""; //nominal ticket, corresponds with a unique identification string of 10 characters
 
-	Ticket(int seat, int row, int stand, int zone, char section) { //constructor
+	Ticket(int seat, int row, int stand, std::string section, int zone, std::string date, std::string time, std::string ID):
+		seat(seat), row(row), stand(stand), zone(zone), date(date), time(time), ID(ID) { //constructor
 		//seat = 1;
 		//row = 1;
 		//stand = 1;
@@ -123,11 +124,11 @@ public:
 		return std::string(this->section);
 	}
 
-	char* getSectionAsPointer() { //getter for section as pointer
-		char* nameCopy = new char[strlen(this->section) + 1];
-		strcpy_s(nameCopy, strlen(this->section) + 1, this->section);
-		return nameCopy;
-	}
+	//char* getSectionAsPointer() { //getter for section as pointer
+	//	char* nameCopy = new char[strlen(this->section) + 1];
+	//	strcpy_s(nameCopy, strlen(this->section) + 1, this->section);
+	//	return nameCopy;
+	//}
 
 	int getZone() {
 		return this->zone;
@@ -145,15 +146,18 @@ public:
 		return std::string(this->ID);
 	}
 
+	Ticket(const Ticket& tick) {
+		this->seat = tick.seat;
+		this->row = tick.row;
+		this->stand = tick.stand;
+		this->section = tick.section;
+		this->time = tick.time;
+		this->zone = tick.zone;
+		this->date = tick.date;
+		this->ID = tick.ID;
+	}
+
 	~Ticket() {
-		if (this->section != nullptr)
-			delete[] this->section;
-		if (this->date != nullptr)
-			delete[] this->date;
-		if (this->time != nullptr)
-			delete[] this->time;
-		if (this->ID != nullptr)
-			delete[] this->ID;
 	}
 
 private:
@@ -179,11 +183,11 @@ private:
 			throw std::exception("Value of stand can be between 1 and 3");
 	}
 
-	/*void setSection(const char* section) { 
-		if (strlen(section) > 99)
+	void setSection(std::string section) { 
+		if (section.length() > 99)
 			throw std::exception("Name over 100 characters");
-		strcpy_s(this->section, 99, section);
-	} */
+		this->section = section;
+	} 
 
 	void setZone(int zone) {
 		if ((zone >= 100 && zone <103) || (zone >= 200 && zone < 203) || (zone >= 300 && zone < 303))
@@ -192,34 +196,34 @@ private:
 			throw std::exception("Value of zone can be from these values: 100,101,102,200,201,202,300,301,302");
 	}
 
-	void setDate(const char* date) {
-		if (strlen(date) != 8)
+	void setDate(std::string date) {
+		if (date.length() != 8)
 			throw std::exception("Wrong date format. Date format must be DD-MM-YY");
-		strcpy_s(this->date, 8, date);
+		this->date = date;
 		//to be added more checks
 	}
 
-	void setTime(const char* time) {
-		if (strlen(time) != 5)
+	void setTime(std::string time) {
+		if (time.length() != 5)
 			throw std::exception("Wrong time format. Date format must be similar to 15:47");
-		strcpy_s(this->time, 5, time);
+		this->time = time;
 		//to be added more checks
 	}
 
-	void setID(const char* ID) {
-		if (strlen(ID) != 10)
+	void setID(std::string ID) {
+		if (ID.length() != 10)
 			throw std::exception("Wrong ID format. ID must be 10 characters long");
-		strcpy_s(this->ID, 10, ID);
+		this->ID = ID;
 		//to be added more checks
 	}
 };
 
 class Event {
 private:
-	char* date = nullptr; //date format DD-MM-YY
-	char* time = nullptr; //time format 15:47
+	std::string date = ""; //date format DD-MM-YY
+	std::string time = ""; //time format 15:47
 	char name[100] = "Unknown";
-	//int availableTickets = Location::maxNoOfSeats;
+	//int availableTickets = Location.getMaxSeats();
 
 public:
 
@@ -236,31 +240,46 @@ public:
 	}
 
 	~Event() {
-		if (this->date != nullptr)
-			delete[] this->date;
-		if (this->time != nullptr)
-			delete[] this->time;
 	}
 
 private:
 
 	void setName(const char* name) {
+		if (strlen(name) < 3)
+			throw std::exception("Name under 3 characters");
 		if (strlen(name) > 99)
 			throw std::exception("Name over 100 characters");
 		strcpy_s(this->name, 99, name);
+
+		/*char letter = name[0];
+		bool ok = 1;
+
+		if(letter > 'Z' || letter < 'A')
+			throw std::exception("Name must contain only letters");
+
+		for (int i = 1; i < strlen(name); i++) {
+			letter = name[i];
+			for (int j = 'a'; j <= 'z'; j++) {
+				if (letter == j)
+					ok = 0;
+			}
+			if (ok == 1)
+				throw std::exception("Name must contain only letters");
+		}*/
 	}
 	
-	void setDate(const char* date) {
-		if (strlen(date) != 8)
+	void setDate(std::string date) {
+		if (date.length() != 8)
 			throw std::exception("Wrong date format. Date format must be DD-MM-YY");
-		strcpy_s(this->date, 8, date);
+		this->date = date;
 		//to be added more checks
 	}
 
-	void setTime(const char* time) {
-		if (strlen(time) != 5)
+	void setTime(std::string time) {
+		if (time.length() != 5)
 			throw std::exception("Wrong time format. Date format must be similar to 15:47");
-		strcpy_s(this->time, 5, time);
+		this->time = time;
+		
 		//to be added more checks
 	}
 

@@ -25,7 +25,30 @@ private:
 
 
 public:
-	
+	char* name = nullptr; // name of the stadium
+	int maxNoOfSeats = 1; // total seats available in the stadium
+	int noOfRows = 1;
+	int noOfColumns = 1;
+	int* stands = nullptr; // eg: North, South, East, West formatted as numbers eg: 1,2,3
+	int* zones = nullptr; // each section has more zones counted in numbers eg: 100,101,102
+
+	void showStadiumSeating(int zone, int stand) {
+		std::cout << "-------------------Pitch-------------------";
+		for (int i = 0; i < noOfRows; i++)
+			for (int j = 0; j < noOfColumns;j++)
+				std::cout << "|_|";
+		std::cout << std::endl;
+		//not complete, must add attributes
+	}
+
+	void updateNoOfSeats(int value) {
+		if (value < 0)
+			this->maxNoOfSeats -= value;
+		else
+			this->maxNoOfSeats += value;
+		//not complete, must add attributes
+	}
+
 	std::string getName() { //getter for name as string
 		return std::string(this->name);
 	}
@@ -135,6 +158,7 @@ private:
 
 class Ticket {
 private:
+	int price = 0;
 	int seat = 0; //column of the position in the stand
 	int row = 0;
 	int stand = 0;
@@ -149,6 +173,10 @@ private:
 	}
 
 public:
+
+	int getPrice() {
+		return this->price;
+	}
 
 	int getSeat() {
 		return this->seat;
@@ -199,10 +227,42 @@ public:
 		this->date = tick.date;
 	}
 
+	void updateTime(std::string time) {
+		if (time.length() == 5)
+			this->time = time;
+		else
+			throw std::exception("Wrong time format");
+	}
+
+	void updateDate(std::string date) {
+		if (time.length() == 10)
+			this->date = date;
+		else
+			throw std::exception("Wrong date format");
+	}
+
+	float priceCalculator(int noOfTickets, Sections section) {
+		if(section == LAWN)
+			return (float)noOfTickets * (float)price;
+		if (section == TRIBUNE)
+			return (float)noOfTickets * (float)price * 1.5;
+		if (section == VIP)
+			return (float)noOfTickets * (float)price * 3;
+		if (section == PRESS)
+			return 0;
+	}
+
 	~Ticket() { //destructor
 	}
 
 private:
+
+	void setPrice(int price) {
+		if (price > 0)
+			this->price = price;
+		else
+			throw std::exception("Value of price can not be negative or null");
+	}
 
 	void setSeat(int seat) {
 		if (seat > 0)
@@ -298,10 +358,16 @@ public:
 	~Event() {
 	}
 
-	void buyTicket() {
-		AVAILABLE_TICKETS--;
-		SOLD_TICKETS++;
-		std::cout << "One ticket bought";
+	void buyTicket(int noTickets) {
+		AVAILABLE_TICKETS-= noTickets;
+		SOLD_TICKETS+= noTickets;
+		std::cout << noTickets << " ticket(s) bought";
+	}
+
+	void returnTicket(int noTickets) {
+		AVAILABLE_TICKETS+= noTickets;
+		SOLD_TICKETS-= noTickets;
+		std::cout << noTickets << " ticket(s) returned";
 	}
 
 private:

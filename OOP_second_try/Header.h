@@ -16,13 +16,41 @@ private:
 	const static int NO_OF_STANDS = 3;
 	const static int NO_OF_ZONES = 9;
 
-	Location(const char* name, int maxNoOfSeats, int noOfRows, int noOfColumns) { // constructor for location
-		this->setMaxSeats(maxNoOfSeats);
-		this->setName(name);
-		this->setRows(noOfRows);
-		this->setColumns(noOfColumns);
+	Location() : //ctor without param
+		name(nullptr), maxNoOfSeats(1), noOfRows(1), noOfColumns(1), stands(nullptr), zones(nullptr) {
+		this->name = new char[strlen("Unknown") + 1];
+		strcpy(this->name, "Unknown");
+		this->stands = new int[NO_OF_STANDS];
+		for (int i = 0;i < NO_OF_STANDS;i++) {
+			this->stands[i] = i+1;
+		}
+		this->zones = new int[NO_OF_ZONES];
+		int k = 100, j=0;
+		for (int i = 0;i < NO_OF_ZONES;i++) {
+				this->stands[i] = k+j;
+				j++;
+				if ((i + 1) % 3 == 0) {
+					k += 100;
+					j = 0;
+				}
+		}
 	}
 
+	Location(const char* name, int maxNoOfSeats, int noOfRows, int noOfColumns, int* stands, int* zones) { //ctor with param
+		this->name = new char[strlen(name) + 1];
+		strcpy(this->name, name);
+		this->setMaxSeats(maxNoOfSeats);
+		this->setRows(noOfRows);
+		this->setColumns(noOfColumns);
+		this->stands = new int[NO_OF_STANDS];
+		for (int i = 0;i < NO_OF_STANDS;i++) {
+			this->stands[i] = stands[i];
+		}
+		this->zones = new int[NO_OF_ZONES];
+		for (int i = 0;i < NO_OF_ZONES;i++) {
+			this->zones[i] = zones[i];
+		}
+	}
 
 public:
 	char* name = nullptr; // name of the stadium
@@ -74,7 +102,7 @@ public:
 	}
 
 	int* getStandsAsPointer() {
-		int vector[this->NO_OF_STANDS];
+		int* vector = nullptr;
 		for (int i = 0; i < NO_OF_STANDS; i++) {
 			vector[i] = this->stands[i];
 		}
@@ -82,7 +110,7 @@ public:
 	}
 
 	int* getZonesAsPointer() {
-		int vector[this->NO_OF_ZONES];
+		int* vector = nullptr;
 		for (int i = 0; i < NO_OF_ZONES; i++) {
 			vector[i] = this->zones[i];
 		}
@@ -97,7 +125,30 @@ public:
 		return NO_OF_ZONES;
 	}
 
-	~Location() {
+	Location(const Location& loc) { //copy ctor
+		this->name = new char[strlen(loc.name) + 1];
+		strcpy(this->name, loc.name);
+		this->maxNoOfSeats = loc.maxNoOfSeats;
+		this->noOfColumns = loc.noOfColumns;
+		this->noOfRows = loc.noOfRows;
+		if (this->stands != nullptr)
+			delete[] this->stands;
+		this->stands = new int[loc.NO_OF_STANDS];
+		for (int i = 0;i < NO_OF_STANDS;i++) {
+			this->stands[i] = loc.stands[i];
+		}
+		if (this->zones != nullptr)
+			delete[] this->zones;
+		this->zones = new int[loc.NO_OF_ZONES];
+		for (int i = 0;i < NO_OF_ZONES;i++) {
+			this->zones[i] = loc.zones[i];
+		}
+	}
+
+	~Location() { //destructor
+		if (this->name != nullptr)
+			delete[] this->name;
+
 		if (this->stands != nullptr)
 			delete[] this->stands;
 
@@ -105,6 +156,31 @@ public:
 			delete[] this->zones;
 	}
 
+	Location& operator= (const Location& loc) { //overload for = operator
+		if (this != &loc) {
+			if (this->name != nullptr)
+				delete[] this->name;
+			this->name = new char[strlen(loc.name) + 1];
+			strcpy(this->name, loc.name);
+
+			this->maxNoOfSeats = loc.maxNoOfSeats;
+			this->noOfColumns = loc.noOfColumns;
+			this->noOfRows = loc.noOfRows;
+			if (this->stands != nullptr)
+				delete[] this->stands;
+			this->stands = new int[loc.NO_OF_STANDS];
+			for (int i = 0;i < NO_OF_STANDS;i++) {
+				this->stands[i] = loc.stands[i];
+			}
+			if (this->zones != nullptr)
+				delete[] this->zones;
+			this->zones = new int[loc.NO_OF_ZONES];
+			for (int i = 0;i < NO_OF_ZONES;i++) {
+				this->zones[i] = loc.zones[i];
+			}
+		}
+		return *this;
+	}
 private:
 
 	void setName(const char* name) { //setter for name
@@ -158,21 +234,47 @@ private:
 
 class Ticket {
 private:
-	int price = 0;
+	char* nameOfEvent = nullptr;
+	int price = 50;
 	int seat = 0; //column of the position in the stand
 	int row = 0;
-	int stand = 0;
+	int stand = 1;
 	Sections section = LAWN;
-	int zone = 0;
+	int zone = 100;
 	std::string date = ""; //date format DD-MM-YY
 	std::string time = ""; //time format 15:47
 	const std::string ID ; //nominal ticket, corresponds with a unique identification string of 10 characters
 
-	Ticket(int seat, int row, int stand, Sections section, int zone, std::string date, std::string time, std::string ID):
-		seat(seat), row(row), stand(stand), section(section), zone(zone), date(date), time(time), ID(ID) { //constructor
+	Ticket() { //ctor without param
+		this->nameOfEvent = new char[strlen("Unknown")+1];
+		strcpy(this->nameOfEvent, "Unknown");
+		this->price = 50;
+		this->seat = 0;
+		this->row = 0;
+		this->stand = 1;
+		this->section = LAWN;
+		this->time = "";
+		this->zone = 100;
+		this->date = "";
+	}
+
+	Ticket(int price, int seat, int row, int stand, Sections section, int zone, std::string date, std::string time, std::string ID) //ctor with param
+		:ID(ID) { //ctor with param
+		this->price = price;
+		this->seat = seat;
+		this->row = row;
+		this->stand = stand;
+		this->section = section;
+		this->time = time;
+		this->zone = zone;
+		this->date = date;
 	}
 
 public:
+
+	std::string getNameOfEvent() {
+		return std::string(this->nameOfEvent);
+	}
 
 	int getPrice() {
 		return this->price;
@@ -218,6 +320,9 @@ public:
 	}
 
 	Ticket(const Ticket& tick): ID(tick.ID) { //copy ctor
+		this->nameOfEvent = new char[strlen(tick.nameOfEvent) + 1];
+		strcpy(this->nameOfEvent, tick.nameOfEvent);
+		this->price = tick.price;
 		this->seat = tick.seat;
 		this->row = tick.row;
 		this->stand = tick.stand;
@@ -253,6 +358,25 @@ public:
 	}
 
 	~Ticket() { //destructor
+		if (this->nameOfEvent != nullptr)
+			delete[] this->nameOfEvent;
+	}
+
+	Ticket& operator=(const Ticket& tick) { //overload for = operator 
+		if (this != &tick) {
+			if (this->nameOfEvent != nullptr)
+				delete[] this->nameOfEvent;
+			this->nameOfEvent = new char[strlen(tick.nameOfEvent) + 1];
+			strcpy(this->nameOfEvent, tick.nameOfEvent);
+			this->seat = tick.seat;
+			this->row = tick.row;
+			this->stand = tick.stand;
+			this->section = tick.section;
+			this->time = tick.time;
+			this->zone = tick.zone;
+			this->date = tick.date;
+		}
+		return *this;
 	}
 
 private:
@@ -329,11 +453,25 @@ class Event {
 private:
 	std::string date = ""; //date format DD-MM-YY
 	std::string time = ""; //time format 15:47
-	char name[100] = "Unknown";
+	char* name = nullptr;
 	static int AVAILABLE_TICKETS;
 	static int SOLD_TICKETS;
 
 public:
+
+	Event() { //ctor without param
+		this->name = new char[strlen("Unknown") + 1];
+		strcpy(this->name, "Unknown");
+		this->date = "";
+		this->time = "";
+	} //trebuie si AVAILABLE_TICKETS si SOLD?
+
+	Event(const char* name, std::string date, std::string time) { //ctor with param
+		this->name = new char[strlen(name) + 1];
+		strcpy(this->name, name);
+		this->date = date;
+		this->time = time;
+	}
 
 	std::string getName() { //getter for name as string
 		return std::string(this->name);
@@ -355,7 +493,33 @@ public:
 		return SOLD_TICKETS;
 	}
 
-	~Event() {
+	~Event() { //destructor
+		if (this->name != nullptr)
+			delete[] this->name;
+	}
+
+	Event(const Event& ev) { //copy ctor
+		if (this->name != nullptr)
+			delete[] this->name;
+		this->name = new char[strlen(ev.name) + 1];
+		strcpy(this->name, ev.name);
+		this->date = ev.date;
+		this->time = ev.date;
+		this->AVAILABLE_TICKETS = ev.AVAILABLE_TICKETS;
+		this->SOLD_TICKETS = ev.SOLD_TICKETS;
+	}
+
+	Event& operator=(const Event& ev) { //overload for = operator
+		if (this != &ev) {
+			if (this->name != nullptr)
+				delete[] this->name;
+			this->name = new char[strlen(ev.name) + 1];
+			strcpy(this->name, ev.name);
+		}
+		this->date = ev.date;
+		this->time = ev.date;
+		this->AVAILABLE_TICKETS = ev.AVAILABLE_TICKETS;
+		this->SOLD_TICKETS = ev.SOLD_TICKETS;
 	}
 
 	void buyTicket(int noTickets) {
@@ -459,7 +623,7 @@ std::istream& operator>>(std::istream& in, Location& loc) { //cin operator for L
 	std::cout << "The name is: " << std::endl;
 	std::string str;
 	in >> str;
-	char* name;
+	char* name = nullptr;
 	strcpy(name, str.c_str());
 	loc.setName(name);
 	std::cout << "The max no. of seats available: " << std::endl;
@@ -476,7 +640,7 @@ std::istream& operator>>(std::istream& in, Location& loc) { //cin operator for L
 	std::cout << "Now introduce the no. of stands, which should be exactly 3: " << std::endl;
 	int stands;
 	in >> stands;
-	int standsvector[3];
+	int standsvector[3] = {};
 	
 	if (stands == 3) {
 		std::cout << "Now introduce each stand number: " << std::endl;
@@ -493,7 +657,7 @@ std::istream& operator>>(std::istream& in, Location& loc) { //cin operator for L
 	std::cout << "Now introduce the no. of zones, which should be exactly 9: " << std::endl;
 	int zones;
 	in >> zones;
-	int zonesvector[9];
+	int zonesvector[9] = {};
 
 	if (stands == 9) {
 		std::cout << "Now introduce each zone number: " << std::endl;
@@ -544,7 +708,7 @@ std::istream& operator>>(std::istream& in, Event ev) {  //cin operator for EVENT
 	ev.setTime(str);
 	std::cout << "The name is: " << std::endl;
 	in >> str;
-	char* name;
+	char* name = nullptr;
 	strcpy(name, str.c_str());
 	ev.setName(name);
 }

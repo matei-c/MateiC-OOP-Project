@@ -181,6 +181,43 @@ public:
 		}
 		return *this;
 	}
+
+	bool operator>(Location& loc) {
+		if (this->maxNoOfSeats > loc.maxNoOfSeats)
+			return true;
+		else
+			return false;
+	}
+
+	bool operator<(Location& loc) {
+		if (this->maxNoOfSeats < loc.maxNoOfSeats)
+			return true;
+		else
+			return false;
+	}
+
+	bool operator<=(Location& loc) {
+		if (this->maxNoOfSeats <= loc.maxNoOfSeats)
+			return true;
+		else
+			return false;
+	}
+
+	bool operator>=(Location& loc) {
+		if (this->maxNoOfSeats >=loc.maxNoOfSeats)
+			return true;
+		else
+			return false;
+	}
+
+	bool operator==(Location& loc) {
+		if (this->maxNoOfSeats == loc.maxNoOfSeats)
+			return true;
+		else
+			return false;
+	}
+	
+
 private:
 
 	void setName(const char* name) { //setter for name
@@ -244,9 +281,10 @@ private:
 	std::string date = ""; //date format DD-MM-YY
 	std::string time = ""; //time format 15:47
 	const std::string ID ; //nominal ticket, corresponds with a unique identification string of 10 characters
-
+	
+public:
 	Ticket() { //ctor without param
-		this->nameOfEvent = new char[strlen("Unknown")+1];
+		this->nameOfEvent = new char[strlen("Unknown") + 1];
 		strcpy(this->nameOfEvent, "Unknown");
 		this->price = 50;
 		this->seat = 0;
@@ -269,8 +307,6 @@ private:
 		this->zone = zone;
 		this->date = date;
 	}
-
-public:
 
 	std::string getNameOfEvent() {
 		return std::string(this->nameOfEvent);
@@ -379,6 +415,21 @@ public:
 		return *this;
 	}
 
+	Ticket& operator++() {
+		this->price++;
+		return *this;
+	}
+
+	Ticket operator++(int) {
+		Ticket tick = *this;
+		++this->price;
+		return *this;
+	}
+
+	explicit operator float() {
+		float a = (float)this->priceCalculator(1, this->section);
+	}
+
 private:
 
 	void setPrice(int price) {
@@ -464,7 +515,7 @@ public:
 		strcpy(this->name, "Unknown");
 		this->date = "";
 		this->time = "";
-	} //trebuie si AVAILABLE_TICKETS si SOLD?
+	}
 
 	Event(const char* name, std::string date, std::string time) { //ctor with param
 		this->name = new char[strlen(name) + 1];
@@ -532,6 +583,12 @@ public:
 		AVAILABLE_TICKETS+= noTickets;
 		SOLD_TICKETS-= noTickets;
 		std::cout << noTickets << " ticket(s) returned";
+	}
+
+	bool operator!=(Event ev) {
+		if (this->date != ev.date)
+			return true;
+		else return false;
 	}
 
 private:

@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <iostream>
+#include <fstream>
 
 enum Sections { LAWN, TRIBUNE, VIP, PRESS };
 
@@ -382,14 +383,14 @@ public:
 			throw std::exception("Wrong date format");
 	}
 
-	float priceCalculator(int noOfTickets, Sections section) {
-		if(section == LAWN)
+	float priceCalculator(int noOfTickets, std::string section) {
+		if(section == "LAWN")
 			return (float)noOfTickets * (float)price;
-		if (section == TRIBUNE)
+		if (section == "TRIBUNE")
 			return (float)noOfTickets * (float)price * 1.5;
-		if (section == VIP)
+		if (section == "VIP")
 			return (float)noOfTickets * (float)price * 3;
-		if (section == PRESS)
+		if (section == "PRESS")
 			return 0;
 	}
 
@@ -427,7 +428,14 @@ public:
 	}
 
 	explicit operator float() {
-		float a = (float)this->priceCalculator(1, this->section);
+		if(this->section == LAWN)
+			float a = (float)this->priceCalculator(1, "LAWN");
+		else if (this->section == VIP)
+			float a = (float)this->priceCalculator(1, "VIP");
+		else if (this->section == TRIBUNE)
+			float a = (float)this->priceCalculator(1, "TRIBUNE");
+		else if (this->section == PRESS)
+			float a = (float)this->priceCalculator(1, "PRESS");
 	}
 
 private:

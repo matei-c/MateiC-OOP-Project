@@ -9,13 +9,13 @@ class Location {
 private:
 	char* name = nullptr; // name of the stadium
 	int maxNoOfSeats = 1; // total seats available in the stadium
-	int noOfRows = 1;
-	int noOfColumns = 1;
+	int noOfRows = 15;
+	int noOfColumns = 20;
 	int* stands = nullptr; // eg: North, South, East, West formatted as numbers eg: 1,2,3
 	int* zones = nullptr; // each section has more zones counted in numbers eg: 100,101,102
 	
 	const static int NO_OF_STANDS = 3;
-	const static int NO_OF_ZONES = 9;
+	const static int NO_OF_ZONES = 10;
 
 	Location() : //ctor without param
 		name(nullptr), maxNoOfSeats(1), noOfRows(1), noOfColumns(1), stands(nullptr), zones(nullptr) {
@@ -54,12 +54,6 @@ private:
 	}
 
 public:
-	char* name = nullptr; // name of the stadium
-	int maxNoOfSeats = 1; // total seats available in the stadium
-	int noOfRows = 1;
-	int noOfColumns = 1;
-	int* stands = nullptr; // eg: North, South, East, West formatted as numbers eg: 1,2,3
-	int* zones = nullptr; // each section has more zones counted in numbers eg: 100,101,102
 
 	void showStadiumSeating(int zone, int stand) {
 		std::cout << "-------------------Pitch-------------------";
@@ -510,6 +504,7 @@ int Event::SOLD_TICKETS = 0;
 
 class Event {
 private:
+	const int id = 0;
 	std::string date = ""; //date format DD-MM-YY
 	std::string time = ""; //time format 15:47
 	char* name = nullptr;
@@ -518,18 +513,22 @@ private:
 
 public:
 
-	Event() { //ctor without param
+	Event() : id(0) { //ctor without param
 		this->name = new char[strlen("Unknown") + 1];
 		strcpy(this->name, "Unknown");
 		this->date = "";
 		this->time = "";
 	}
 
-	Event(const char* name, std::string date, std::string time) { //ctor with param
+	Event(const int id, const char* name, std::string date, std::string time): id(id) { //ctor with param
 		this->name = new char[strlen(name) + 1];
 		strcpy(this->name, name);
 		this->date = date;
 		this->time = time;
+	}
+
+	int getId() {
+		return this->id;
 	}
 
 	std::string getName() { //getter for name as string
@@ -557,7 +556,7 @@ public:
 			delete[] this->name;
 	}
 
-	Event(const Event& ev) { //copy ctor
+	Event(const Event& ev): id(ev.id) { //copy ctor
 		if (this->name != nullptr)
 			delete[] this->name;
 		this->name = new char[strlen(ev.name) + 1];

@@ -1,7 +1,9 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include "Header.h"
+#include "Ticket.h"
+#include "Event.h"
+#include "Location.h"
 
 using namespace std;
 

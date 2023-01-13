@@ -2,9 +2,8 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-
-int Event::AVAILABLE_TICKETS = 300;
-int Event::SOLD_TICKETS = 0;
+#define _CRT_SECURE_NO_WARNINGS
+#pragma warning(disable : 4996)
 
 class Event {
 private:
@@ -20,8 +19,6 @@ public:
 	Event() : id(0) { //ctor without param
 		this->name = new char[strlen("Unknown") + 1];
 		strcpy(this->name, "Unknown");
-		this->date = "";
-		this->time = "";
 	}
 
 	Event(const int id, const char* name, std::string date, std::string time) : id(id) { //ctor with param
@@ -108,14 +105,16 @@ private:
 		AVAILABLE_TICKETS -= value;
 	}
 
-	void setName(const char* name) {
-		if (strlen(name) < 3)
-			throw std::exception("Name under 3 characters");
+	void setName(const char* name) { //setter for name
+		//validating the input
 		if (strlen(name) > 99)
 			throw std::exception("Name over 100 characters");
-		strcpy_s(this->name, 99, name);
-
-		/*char letter = name[0];
+		if (this->name != nullptr)
+			delete[] this->name;
+		this->name = new char[strlen(name) + 1];
+		strcpy(this->name, name);
+	
+		char letter = name[0];
 		bool ok = 1;
 
 		if(letter > 'Z' || letter < 'A')
@@ -129,7 +128,7 @@ private:
 			}
 			if (ok == 1)
 				throw std::exception("Name must contain only letters");
-		}*/
+		}
 	}
 
 	void setDate(std::string date) {
@@ -147,6 +146,7 @@ private:
 		//to be added more checks
 	}
 
+
 	friend std::istream& operator>>(std::istream& in, Event ev);
 };
 
@@ -156,6 +156,7 @@ std::ostream& operator<<(std::ostream& out, Event& ev) { //cout operator for EVE
 	out << "The time is: " << ev.getTime() << std::endl;
 	out << "No. of available tickets: " << ev.getAvailableTickets() << std::endl;
 	out << "No. of sold tickets:" << ev.getSoldTickets() << std::endl;
+	return out;
 }
 
 std::istream& operator>>(std::istream& in, Event ev) {  //cin operator for EVENT class
@@ -168,7 +169,9 @@ std::istream& operator>>(std::istream& in, Event ev) {  //cin operator for EVENT
 	ev.setTime(str);
 	std::cout << "The name is: " << std::endl;
 	in >> str;
-	char* name = nullptr;
-	strcpy(name, str.c_str());
-	ev.setName(name);
+	ev.setName(str.c_str());
+	return in;
 }
+
+int Event::AVAILABLE_TICKETS = 300;
+int Event::SOLD_TICKETS = 0;

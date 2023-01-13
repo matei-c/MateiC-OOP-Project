@@ -2,6 +2,8 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#define _CRT_SECURE_NO_WARNINGS
+#pragma warning(disable : 4996)
 
 enum Sections { LAWN, TRIBUNE, VIP, PRESS };
 
@@ -65,13 +67,13 @@ public:
 	}
 
 	std::string getSection() { //getter for section as string
-		if(this->section = LAWN)
+		if(this->section == LAWN)
 			return std::string("LAWN");
-		if (this->section = VIP)
+		if (this->section == VIP)
 			return std::string("VIP");
-		if (this->section = TRIBUNE)
+		if (this->section == TRIBUNE)
 			return std::string("TRIBUNE");
-		if (this->section = PRESS)
+		if (this->section == PRESS)
 			return std::string("PRESS");
 	}
 
@@ -249,6 +251,7 @@ std::ostream& operator<<(std::ostream& out, Ticket& tick) { //cout operator for 
 	out << "The date is: " << tick.getDate() << std::endl;
 	out << "The time is: " << tick.getTime() << std::endl;
 	out << "The ticket ID is: " << tick.getID() << std::endl;
+	return out;
 }
 
 std::istream& operator>>(std::istream& in, Ticket tick) { //cin operator for TICKET class
@@ -275,4 +278,5 @@ std::istream& operator>>(std::istream& in, Ticket tick) { //cin operator for TIC
 	std::cout << "The time is: " << std::endl;
 	in >> str;
 	tick.setTime(str);
+	return in;
 }

@@ -2,6 +2,8 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#define _CRT_SECURE_NO_WARNINGS
+#pragma warning(disable : 4996)
 
 class Location {
 private:
@@ -171,6 +173,14 @@ public:
 			return false;
 	}
 
+	virtual void printInfo() {
+		std::cout << "\nThe number of zones is: " << this->noOfZones;
+		std::cout << "\nThe number of rows is: " << this->noOfRows;
+		for (int i = 0; i < this->noOfRows;i++) {
+			std::cout << "\nThe number of seats for row " << i + 1 << " is: " << this->noOfSeatsPerRow[i];
+		}
+	}
+
 
 private:
 
@@ -208,6 +218,7 @@ std::ostream& operator<<(std::ostream& out, Location loc) { //cout operator for 
 	for (int i = 0; i < loc.getRows(); i++) {
 		out << "\nRow number " << i + 1 << " has " << loc.getNoOfSeatsPerRowAsAPointer()[i] << " seats";
 	}
+	return out;
 }
 
 std::istream& operator>>(std::istream& in, Location& loc) { //cin operator for LOCATION class
@@ -247,4 +258,5 @@ std::istream& operator>>(std::istream& in, Location& loc) { //cin operator for L
 		}
 		loc.noOfSeatsPerRow[i] = value;
 	}
+	return in;
 }

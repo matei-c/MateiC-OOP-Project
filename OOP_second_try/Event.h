@@ -6,7 +6,7 @@
 #pragma warning(disable : 4996)
 
 class Event {
-private:
+protected:
 	const int id = 0;
 	std::string date = ""; //date format DD-MM-YY
 	std::string time = ""; //time format 15:47
@@ -175,3 +175,12 @@ std::istream& operator>>(std::istream& in, Event ev) {  //cin operator for EVENT
 
 int Event::AVAILABLE_TICKETS = 300;
 int Event::SOLD_TICKETS = 0;
+
+class Football_match : public Event {
+protected:
+	string cup_name;
+public:
+	Football_match(const int id, const char* name, std::string date, std::string time, std::string cup_name)
+		:Event(id, name, date, time), cup_name(cup_name)
+	{}
+};

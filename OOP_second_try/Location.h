@@ -6,7 +6,7 @@
 #pragma warning(disable : 4996)
 
 class Location {
-private:
+protected:
 	char* name = nullptr; // name of the stadium
 	int noOfRows = 0;
 	int noOfZones = 0;
@@ -14,6 +14,8 @@ private:
 
 	const static int MIN_SEATS_PER_ROW = 1;
 	const static int MAX_SEATS_PER_ROW = 30;
+
+	virtual void printInfo() = 0;
 
 	Location() //default ctor
 	{
@@ -210,7 +212,7 @@ private:
 	}
 };
 
-std::ostream& operator<<(std::ostream& out, Location loc) { //cout operator for LOCATION class
+std::ostream& operator<<(std::ostream& out, Location& loc) { //cout operator for LOCATION class
 	out << "\nThe name of the location is: " << loc.getName() << std::endl;
 	out << "The max no of seats that the location has: " << loc.getTotalNoOfSeats() << std::endl;
 	out << "The no of zones is: " << loc.getZones() << std::endl;
@@ -260,3 +262,24 @@ std::istream& operator>>(std::istream& in, Location& loc) { //cin operator for L
 	}
 	return in;
 }
+
+class Stadium : public Location {
+protected:
+	int noOfToilets = 0;
+	int noOfFoodPlaces = 0;
+	string homeTeam = "";
+
+public:
+	Stadium(const char* name, int noOfRows, int noOfZones, int* noOfSeatsPerRow, 
+			int noOfToilets, int noOfFoodPlaces, string homeTeam) 
+	:Location(name, noOfRows, noOfZones, noOfSeatsPerRow), 
+	noOfFoodPlaces(noOfFoodPlaces), noOfToilets(noOfToilets), homeTeam(homeTeam){
+		
+	}
+	void printInfo() {
+		this->Location::printInfo();
+		cout << "The number of toilets is: " << noOfToilets;
+		cout << "The number of food places is: " << noOfFoodPlaces;
+		cout << "The home team is: " << homeTeam;
+	}
+};

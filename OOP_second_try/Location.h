@@ -15,8 +15,6 @@ protected:
 	const static int MIN_SEATS_PER_ROW = 1;
 	const static int MAX_SEATS_PER_ROW = 30;
 
-	virtual void printInfo() = 0;
-
 	Location() //default ctor
 	{
 		std::cout << "\nCalling default constructor for location";
@@ -175,7 +173,7 @@ public:
 			return false;
 	}
 
-	virtual void printInfo() {
+	void printInfo() {
 		std::cout << "\nThe number of zones is: " << this->noOfZones;
 		std::cout << "\nThe number of rows is: " << this->noOfRows;
 		for (int i = 0; i < this->noOfRows;i++) {
@@ -267,19 +265,19 @@ class Stadium : public Location {
 protected:
 	int noOfToilets = 0;
 	int noOfFoodPlaces = 0;
-	string homeTeam = "";
+	std::string homeTeam = "";
 
 public:
 	Stadium(const char* name, int noOfRows, int noOfZones, int* noOfSeatsPerRow, 
-			int noOfToilets, int noOfFoodPlaces, string homeTeam) 
+			int noOfToilets, int noOfFoodPlaces, std::string homeTeam) 
 	:Location(name, noOfRows, noOfZones, noOfSeatsPerRow), 
 	noOfFoodPlaces(noOfFoodPlaces), noOfToilets(noOfToilets), homeTeam(homeTeam){
 		
 	}
 	void printInfo() {
 		this->Location::printInfo();
-		cout << "The number of toilets is: " << noOfToilets;
-		cout << "The number of food places is: " << noOfFoodPlaces;
-		cout << "The home team is: " << homeTeam;
+		std::cout << "The number of toilets is: " << this->noOfToilets;
+		std::cout << "The number of food places is: " << this->noOfFoodPlaces;
+		std::cout << "The home team is: " << this->homeTeam;
 	}
 };

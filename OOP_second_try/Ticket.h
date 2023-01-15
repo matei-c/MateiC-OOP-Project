@@ -13,9 +13,8 @@ private:
 	int price = 50;
 	int seat = 0; //column of the position in the stand
 	int row = 0;
-	int stand = 1;
 	Sections section = LAWN;
-	int zone = 100;
+	int zone = 1;
 	std::string date = ""; //date format DD-MM-YY
 	std::string time = ""; //time format 15:47
 	const std::string ID ; //nominal ticket, corresponds with a unique identification string of 10 characters
@@ -27,7 +26,6 @@ public:
 		this->price = 50;
 		this->seat = 0;
 		this->row = 0;
-		this->stand = 1;
 		this->section = LAWN;
 		this->time = "";
 		this->zone = 100;
@@ -39,7 +37,6 @@ public:
 		this->price = price;
 		this->seat = seat;
 		this->row = row;
-		this->stand = stand;
 		this->section = section;
 		this->time = time;
 		this->zone = zone;
@@ -60,10 +57,6 @@ public:
 
 	int getRow() {
 		return this->row;
-	}
-
-	int getStand() {
-		return this->stand;
 	}
 
 	std::string getSection() { //getter for section as string
@@ -99,7 +92,6 @@ public:
 		this->price = tick.price;
 		this->seat = tick.seat;
 		this->row = tick.row;
-		this->stand = tick.stand;
 		this->section = tick.section;
 		this->time = tick.time;
 		this->zone = tick.zone;
@@ -144,7 +136,6 @@ public:
 			strcpy(this->nameOfEvent, tick.nameOfEvent);
 			this->seat = tick.seat;
 			this->row = tick.row;
-			this->stand = tick.stand;
 			this->section = tick.section;
 			this->time = tick.time;
 			this->zone = tick.zone;
@@ -198,13 +189,6 @@ private:
 			throw std::exception("Value of rows can not be negative or null");
 	}
 
-	void setStand(int stand) {
-		if (stand > 0 && stand < 4)
-			this->stand = stand;
-		else
-			throw std::exception("Value of stand can be between 1 and 3");
-	}
-
 	void setSection(std::string section) { 
 		if (section == "LAWN")
 			this->section = LAWN;
@@ -218,10 +202,10 @@ private:
 	} 
 
 	void setZone(int zone) {
-		if ((zone >= 100 && zone <103) || (zone >= 200 && zone < 203) || (zone >= 300 && zone < 303))
+		if (zone > 0)
 			this->zone = zone;
 		else
-			throw std::exception("Value of zone can be from these values: 100,101,102,200,201,202,300,301,302");
+			throw std::exception("Wrong value of zone.");
 	}
 
 	void setDate(std::string date) {
@@ -245,7 +229,6 @@ private:
 std::ostream& operator<<(std::ostream& out, Ticket& tick) { //cout operator for TICKET class
 	out << "The seat is: " << tick.getSeat() << std::endl;
 	out << "The row is: " << tick.getRow() << std::endl;
-	out << "The stand is: " << tick.getStand() << std::endl;
 	out << "The section is: " << tick.getSection() << std::endl;
 	out << "The zone is: " << tick.getZone() << std::endl;
 	out << "The date is: " << tick.getDate() << std::endl;
@@ -262,9 +245,6 @@ std::istream& operator>>(std::istream& in, Ticket tick) { //cin operator for TIC
 	std::cout << "The row is: "  << std::endl;
 	in >> value;
 	tick.setRow(value);
-	std::cout << "The stand is: "  << std::endl;
-	in >> value;
-	tick.setStand(value);
 	std::cout << "The section is: "  << std::endl;
 	std::string str;
 	in >> str;

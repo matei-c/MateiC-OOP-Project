@@ -177,9 +177,8 @@ int Event::AVAILABLE_TICKETS = 300;
 int Event::SOLD_TICKETS = 0;
 
 class Football_match : public Event {
-protected:
-	string cup_name;
 public:
+	std::string cup_name = "";
 	Football_match(const int id, const char* name, std::string date, std::string time, std::string cup_name)
 		:Event(id, name, date, time), cup_name(cup_name)
 	{}

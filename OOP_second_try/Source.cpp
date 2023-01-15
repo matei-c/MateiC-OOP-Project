@@ -25,10 +25,12 @@ int main() {
 		cout << endl << "2. Return tickets";
 		cout << endl << "3. Show available events";
 		cout << endl << "4. Admin mode";
-		cout << endl << "5. Quit application";
+		cout << endl << "5. Quit application\n";
 		cin >> option;
 		switch (option) {
 		case 1:
+			cout << "Functionality not yet implemented. Now quitting...";
+			return 0;
 			cout << endl << "Type in the event id you want to buy tickets to:";
 			int event_id;
 			cin >> event_id;
@@ -47,12 +49,16 @@ int main() {
 
 			break;
 		case 2:
-
+			cout << "Functionality not yet implemented. Now quitting...";
+			return 0;
 			break;
 		case 3:
-
+			cout << "Functionality not yet implemented. Now quitting...";
+			return 0;
 			break;
 		case 4:
+			cout << "Functionality not yet implemented. Now quitting...";
+			return 0;
 			cin >> pass;
 			if (pass == "admin") {
 				cout << endl << "Welcome to admin mode. Here you can add manually locations and events. Choose an option by typing the corresponding number:";

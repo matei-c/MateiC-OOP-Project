@@ -73,8 +73,15 @@ int main() {
 					else {
 						cout << endl << "Type in the file name. Make sure the file contains only one event and it is formatted as one value one line in the correct class order.";
 						cin >> file_name;
+						fstream file();
 						ifstream inputFile(file_name.c_str(), ios::in);
-						
+						if (!inputFile.is_open()) {
+							std::cout << "\nThe file with the name entered is missing.";
+						}
+						else {
+							std::cout << "\nThe file provided is available.";
+						}
+						inputFile.close();
 					}
 
 					break;
